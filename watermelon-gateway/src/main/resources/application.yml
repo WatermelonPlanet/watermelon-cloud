@@ -1,0 +1,65 @@
+server:
+  port: 8080
+
+spring:
+
+  application:
+    name: watermelon-gateway
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+        namespace: dev
+
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有请求
+            # 跨域处理 允许所有的域
+            allowedOriginPatterns: "*"
+            # 允许请求中携带的头信息
+            allowedHeaders: "*"
+            # 是否允许携带cookie
+            allowCredentials: true
+            # 跨域检测的有效期,单位s
+            maxAge: 3600
+            allowedMethods: # 支持的方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+      routes:
+        - id: watermelon-user-server
+          uri: lb://watermelon-user-server
+          predicates:
+            - Path=/watermelon-user/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay= # 它的作用是将请求中的令牌（token）传递给下游服务 对应的是这个class TokenRelayGatewayFilterFactory
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging-client-oidc:
+            provider: spring
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: messaging-client-oidc
+
+        provider:
+          spring:
+            issuer-uri: http://192.168.56.1:9000 #这个不要和客户端ip一致 不然玩不了
+
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web.*: debug
+    org.springframework.security.*: trace
+    org.springframework.web.reactive.* : trace
