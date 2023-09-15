@@ -12,7 +12,7 @@
   - `watermelon-gateway` [网关服务]
   - `watermelon-user`[用户服务模块]
     - `watermelon-user-api`[用户服务对外提供调用的api]
-    - `watermelon-user-server`[用户服务]
+    - `watermelon-tenant-user-server`[用户服务]
 
 
 

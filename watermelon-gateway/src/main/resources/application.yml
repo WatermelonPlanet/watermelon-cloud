@@ -30,8 +30,8 @@ spring:
               - PUT
               - DELETE
       routes:
-        - id: watermelon-user-server
-          uri: lb://watermelon-user-server
+        - id: watermelon-tenant-user-server
+          uri: lb://watermelon-tenant-user-server
           predicates:
             - Path=/watermelon-user/**
           filters:

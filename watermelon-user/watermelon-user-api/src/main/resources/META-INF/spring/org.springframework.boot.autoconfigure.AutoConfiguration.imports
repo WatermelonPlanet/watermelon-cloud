@@ -1,3 +1,0 @@
-com.watermelon.user.api.conf.UserApiAutoConfiguration
-com.watermelon.user.api.impl.SysRegisteredClientApiImpl
-com.watermelon.user.api.impl.SysUserClientApiImpl

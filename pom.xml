@@ -20,10 +20,10 @@
 
     <!--    子模块-->
     <modules>
-        <module>watermelon-authorization-server</module>
+        <module>watermelon-authorization</module>
         <module>watermelon-common</module>
         <module>watermelon-gateway</module>
-        <module>watermelon-user</module>
+        <module>watermelon-tenant-user</module>
     </modules>
 
 
