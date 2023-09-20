@@ -6,10 +6,70 @@
     <title>Spring Authorization Server sample</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
     <link rel="stylesheet" href="/assets/css/signin.css" th:href="@{/assets/css/signin.css}" />
+    <style>
+        /* 添加自定义样式 */
+        body {
+            background-color: #f5f5f5; /* 设置背景颜色 */
+            font-family: Arial, sans-serif; /* 设置字体 */
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .form-signin {
+            margin-top: 20px;
+        }
+
+        .form-floating {
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        /* 添加图标 */
+        .form-floating label::after {
+            content: " ";
+            display: inline-block;
+            background-image: url('/assets/img/user-icon.png'); /* 替换为你的图标路径 */
+            width: 16px;
+            height: 16px;
+            background-size: 100%;
+            margin-right: 5px;
+        }
+
+        .btn-block {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <form class="form-signin w-100 m-auto" method="post" th:action="@{/login}">
+    <form class="form-signin w-100 m-auto" id="loginForm" method="post">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>
@@ -17,16 +77,30 @@
             You have been logged out.
         </div>
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-        <div class="form-floating">
-            <input type="text" id="username" name="username" class="form-control" required autofocus>
-            <label for="username">Username</label>
+        <div id="usernamePasswordFields">
+            <!-- 用户名和密码登录模式 -->
+            <div class="form-floating">
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" id="password" name="password" class="form-control" required>
+                <label for="password">Password</label>
+            </div>
         </div>
-        <div class="form-floating">
-            <input type="password" id="password" name="password" class="form-control" required>
-            <label for="password">Password</label>
+        <div id="phoneCodeFields" style="display: none;">
+            <!-- 手机号和验证码登录模式 -->
+            <div class="form-floating">
+                <input type="text" id="phone" name="phone" class="form-control" required autofocus>
+                <label for="phone">Phone</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" id="code" name="code" class="form-control" required>
+                <label for="code">Code</label>
+            </div>
         </div>
         <div>
-            <button class="w-100 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button class="w-100 btn btn-lg btn-primary btn-block" type="button" onclick="submitForm()">Sign in</button>
             <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/gitee" role="link" style="margin-top: 10px">
                 <img src="/assets/img/gitee.png" th:src="@{/assets/img/gitee.png}" width="20" style="margin-right: 5px;" alt="Sign in with Gitee">
                 Sign in with Gitee
@@ -35,8 +109,49 @@
                 <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" style="margin-right: 5px;" alt="Sign in with Github">
                 Sign in with Github
             </a>
+            <button class="w-100 btn btn-secondary btn-block" type="button" id="toggleModeButton" onclick="toggleLoginMode()">Toggle Login Mode</button>
         </div>
     </form>
 </div>
+<script>
+    function toggleLoginMode() {
+        var usernamePasswordFields = document.getElementById("usernamePasswordFields");
+        var phoneCodeFields = document.getElementById("phoneCodeFields");
+
+        if (usernamePasswordFields.style.display === "none") {
+            usernamePasswordFields.style.display = "block";
+            phoneCodeFields.style.display = "none";
+        } else {
+            usernamePasswordFields.style.display = "none";
+            phoneCodeFields.style.display = "block";
+        }
+    }
+
+    function submitForm() {
+        var mode = document.getElementById("usernamePasswordFields").style.display === "none" ? "phone" : "username";
+        var phone = document.getElementById("phone").value;
+        var code = document.getElementById("code").value;
+
+        if (mode === "phone") {
+            // 构建手机号验证码登录的URL
+            var url = "/oauth2/token?grant_type=sms_code&phone=" + phone + "&code=" + code;
+
+            // 创建XMLHttpRequest对象
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+
+            // 设置Authorization头信息
+            xhr.setRequestHeader("Authorization", "Basic bWVzc2FnaW5nLWNsaWVudDpzZWNyZXQ=");
+
+            // 发送请求
+            xhr.send();
+        } else {
+            // 恢复默认的用户名密码登录URL
+            var loginForm = document.getElementById("loginForm");
+            loginForm.action = "/login";
+            loginForm.submit();
+        }
+    }
+</script>
 </body>
 </html>

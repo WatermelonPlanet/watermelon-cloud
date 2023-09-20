@@ -9,8 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @description
  */
 @SpringBootApplication
-public class WatermelonUserServerApplication {
+public class WatermelonTenantUserServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(WatermelonUserServerApplication.class,args);
+        SpringApplication.run(WatermelonTenantUserServerApplication.class,args);
     }
 }

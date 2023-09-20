@@ -44,7 +44,7 @@ public class DefaultSecurityConfig {
 				.csrf(AbstractHttpConfigurer::disable)
 				.formLogin(formLogin ->
 						formLogin
-								.loginPage("/login")//④ 授权服务认证页面（可以配置相对和绝对地址，前后端分离的情况下填前端的url）
+								.loginPage("/login")//④ 授权服务认证页面（可以配置相对和绝对地址，前后端分离的情况下填前端的url） `UsernamePasswordAuthenticationFilter`
 				)
 				.oauth2Login(oauth2Login ->
 						oauth2Login

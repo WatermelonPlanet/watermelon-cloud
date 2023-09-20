@@ -43,7 +43,7 @@ public final class FederatedIdentityAuthenticationSuccessHandler implements Auth
 				this.oauth2UserHandler.accept((OAuth2User) authentication.getPrincipal());
 			}
 		}
-		log.info("登录成功.....");
+		log.info("登录成功.....FederatedIdentityAuthenticationSuccessHandler...");
 		this.delegate.onAuthenticationSuccess(request, response, authentication);
 	}
 
