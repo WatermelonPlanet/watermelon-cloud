@@ -17,6 +17,7 @@
     <modules>
         <module>watermelon-authorization-server</module>
         <module>watermelon-authorization-user-core</module>
+        <module>watermelon-authorization-oauth2-client</module>
     </modules>
 
 </project>

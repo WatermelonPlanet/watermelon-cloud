@@ -33,6 +33,10 @@ public class SysRegisteredClientServiceImpl extends ServiceImpl<SysRegisteredCli
     @Override
     public String saveClient(SysRegisteredClientDto clientDto) {
         SysRegisteredClientDo sysRegisteredClientDo = BeanUtil.copyProperties(clientDto, SysRegisteredClientDo.class);
+        SysRegisteredClientDto sysRegisteredClientExist = this.getOneByClientId(sysRegisteredClientDo.getClientId());
+        if (sysRegisteredClientExist != null) {
+            return sysRegisteredClientExist.getId();
+        }
         this.save(sysRegisteredClientDo);
         return sysRegisteredClientDo.getId();
     }
