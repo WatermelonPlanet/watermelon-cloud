@@ -1,0 +1,4 @@
+com.watermelon.authorization.oauth.client.convert.OAuth2UserConvertContext
+com.watermelon.authorization.oauth.client.convert.impl.GiteeOAuth2UserConvert
+com.watermelon.authorization.oauth.client.ExtDefaultOAuth2UserService
+com.watermelon.authorization.oauth.client.storage.impl.DefaultOauth2UserStorage
