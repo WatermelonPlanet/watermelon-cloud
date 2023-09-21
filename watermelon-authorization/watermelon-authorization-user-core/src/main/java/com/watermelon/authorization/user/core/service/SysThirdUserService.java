@@ -1,6 +1,7 @@
 package com.watermelon.authorization.user.core.service;
 
 
+import com.watermelon.authorization.user.core.dto.SysThirdUserAddDto;
 import com.watermelon.authorization.user.core.dto.SysThirdUserDetailDto;
 
 /**
@@ -26,11 +27,11 @@ public interface SysThirdUserService {
     SysThirdUserDetailDto getOneByUserId(String userId);
 
     /**
-     * 新增|更新
-     * @param sysThirdUser
+     * 新增
+     * @param sysThirdUserAddDto
      * @return
      */
-    Long submit(SysThirdUserDetailDto sysThirdUser);
+    Long save(SysThirdUserAddDto sysThirdUserAddDto);
 }
 
 

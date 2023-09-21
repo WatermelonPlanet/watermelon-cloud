@@ -1,10 +1,7 @@
-package com.watermelon.authorization.user.core.mapper.entity;
+package com.watermelon.authorization.user.core.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.watermelon.common.core.enums.AccountPlatform;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,15 +9,13 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 第三方用户表
- *
+ * 用户表新增
  * @author byh
- * @date 2023-09-14
+ * @date 2023-09-21
  * @description
  */
 @Data
-@TableName("sys_third_user")
-public class SysThirdUserDo implements Serializable {
+public class SysUserAddDto implements Serializable {
     /**
      * 创建时间
      */
@@ -36,27 +31,29 @@ public class SysThirdUserDo implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
-    /**
-     * 第三方平台唯一id
-     */
-    private String uniqueId;
     /**
      * 用户名称
      */
     private String name;
     /**
-     * 平台类型(WX:微信；QQ:QQ)
+     * 密码
      */
-    private AccountPlatform platform;
+    private String password;
+    /**
+     * 手机号(未加密)
+     */
+    private String phone;
+    /**
+     * 手机号(加密)
+     */
+    private String mobile;
     /**
      * 头像
      */
     private String avatar;
     /**
-     * 用户id
+     * 账号状态(0:无效；1:有效)
      */
-    private Long userId;
-
+    private Integer status;
 }

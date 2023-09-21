@@ -1,26 +1,22 @@
-package com.watermelon.authorization.user.core.mapper.entity;
+package com.watermelon.authorization.user.core.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.watermelon.common.core.enums.AccountPlatform;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 第三方用户表
- *
+ * 第三方服务账号详情dto
  * @author byh
- * @date 2023-09-14
+ * @date 2023-09-21
  * @description
  */
 @Data
-@TableName("sys_third_user")
-public class SysThirdUserDo implements Serializable {
+public class SysThirdUserAddDto {
+
     /**
      * 创建时间
      */
@@ -36,7 +32,6 @@ public class SysThirdUserDo implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
     /**
      * 第三方平台唯一id
@@ -58,5 +53,4 @@ public class SysThirdUserDo implements Serializable {
      * 用户id
      */
     private Long userId;
-
 }

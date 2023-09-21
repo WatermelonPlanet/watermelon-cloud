@@ -15,7 +15,7 @@ import lombok.ToString;
 @ToString
 public enum AccountPlatform {
 
-    WX,
+    WECHAT,
     QQ,
     GITEE,
     GITHUB;

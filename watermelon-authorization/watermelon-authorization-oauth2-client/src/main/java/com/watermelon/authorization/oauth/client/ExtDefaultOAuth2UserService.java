@@ -3,9 +3,9 @@ package com.watermelon.authorization.oauth.client;
 
 import com.watermelon.authorization.oauth.client.convert.OAuth2UserConvertContext;
 import com.watermelon.authorization.oauth.client.dto.OAuth2ThirdUserDto;
-import com.watermelon.authorization.oauth.client.enums.AccountPlatform;
 import com.watermelon.authorization.oauth.client.exception.OAuth2UserConvertException;
 import com.watermelon.authorization.oauth.client.storage.Oauth2UserStorage;
+import com.watermelon.common.core.enums.AccountPlatform;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

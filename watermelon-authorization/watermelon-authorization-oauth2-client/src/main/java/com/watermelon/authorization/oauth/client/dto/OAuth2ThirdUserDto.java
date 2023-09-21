@@ -1,7 +1,8 @@
 package com.watermelon.authorization.oauth.client.dto;
 
 
-import com.watermelon.authorization.oauth.client.enums.AccountPlatform;
+
+import com.watermelon.common.core.enums.AccountPlatform;
 
 import java.io.Serializable;
 import java.util.Objects;

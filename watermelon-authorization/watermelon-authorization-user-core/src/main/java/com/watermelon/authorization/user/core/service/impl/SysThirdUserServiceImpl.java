@@ -3,6 +3,7 @@ package com.watermelon.authorization.user.core.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.watermelon.authorization.user.core.dto.SysThirdUserAddDto;
 import com.watermelon.authorization.user.core.dto.SysThirdUserDetailDto;
 import com.watermelon.authorization.user.core.mapper.SysThirdUserMapper;
 import com.watermelon.authorization.user.core.mapper.entity.SysThirdUserDo;
@@ -41,12 +42,13 @@ public class SysThirdUserServiceImpl extends ServiceImpl<SysThirdUserMapper, Sys
     }
 
     @Override
-    public Long submit(SysThirdUserDetailDto sysThirdUser) {
+    public Long save(SysThirdUserAddDto sysThirdUserAddDto) {
         SysThirdUserDo sysThirdUserDo = this.getOne(new LambdaQueryWrapper<SysThirdUserDo>()
-                .eq(SysThirdUserDo::getUniqueId, sysThirdUser.getUniqueId()));
-
+                .eq(SysThirdUserDo::getUniqueId, sysThirdUserAddDto.getUniqueId())
+                .eq(SysThirdUserDo::getPlatform, sysThirdUserAddDto.getPlatform())
+        );
         if (sysThirdUserDo == null) {
-            sysThirdUserDo = BeanUtil.copyProperties(sysThirdUser, SysThirdUserDo.class);
+            sysThirdUserDo = BeanUtil.copyProperties(sysThirdUserAddDto, SysThirdUserDo.class);
             this.save(sysThirdUserDo);
         }
         return sysThirdUserDo.getId();
