@@ -44,7 +44,7 @@ public class SysThirdUserDetailDto {
     /**
      * 平台类型(WX:微信；QQ:QQ)
      */
-    private AccountPlatform type;
+    private AccountPlatform platform;
     /**
      * 头像
      */

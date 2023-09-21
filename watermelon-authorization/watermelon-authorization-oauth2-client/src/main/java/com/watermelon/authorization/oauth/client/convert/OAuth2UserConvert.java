@@ -1,7 +1,7 @@
 package com.watermelon.authorization.oauth.client.convert;
 
 import com.watermelon.authorization.oauth.client.dto.OAuth2ThirdUserDto;
-import com.watermelon.authorization.oauth.client.enums.AccountPlatform;
+import com.watermelon.common.core.enums.AccountPlatform;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

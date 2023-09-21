@@ -1,9 +1,8 @@
 package com.watermelon.authorization.oauth.client.convert;
 
 
-import com.watermelon.authorization.oauth.client.enums.AccountPlatform;
 import com.watermelon.authorization.oauth.client.exception.OAuth2UserConvertException;
-
+import com.watermelon.common.core.enums.AccountPlatform;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

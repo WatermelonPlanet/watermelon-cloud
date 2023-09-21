@@ -1,6 +1,7 @@
 package com.watermelon.authorization.user.core.service;
 
 
+import com.watermelon.authorization.user.core.dto.SysUserAddDto;
 import com.watermelon.authorization.user.core.dto.SysUserDetailDto;
 
 /**
@@ -23,4 +24,13 @@ public interface SysUserService {
      * @return
      */
     SysUserDetailDto findOneByUserName(String userName);
+
+    /**
+     * 新增
+     * @param sysUserAddDto
+     * @return
+     */
+    Long save(SysUserAddDto sysUserAddDto);
+
+
 }
