@@ -15,4 +15,9 @@ public class LoginController {
 		return "login";
 	}
 
+
+	@GetMapping("/sso-login")
+	public String login1() {
+		return "sso-login";
+	}
 }

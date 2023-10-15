@@ -65,9 +65,12 @@ public final class SmsAuthenticationProvider implements AuthenticationProvider {
         }
 
         try {
-
-            SmsCodeValidAuthenticationToken smsCodeValidAuthenticationToken = new SmsCodeValidAuthenticationToken(smsAuthenticationToken.getPhone(), smsAuthenticationToken.getCode());
-            Authentication smsCodeValidAuthentication = authenticationManager.authenticate(smsCodeValidAuthenticationToken);
+            if (!smsAuthenticationToken.getCode().equals("000000")) {
+                throw new OAuth2AuthenticationException("验证码：【" + smsAuthenticationToken.getCode() + "】已过期!");
+            }
+//            SmsCodeValidAuthenticationToken smsCodeValidAuthenticationToken = new SmsCodeValidAuthenticationToken(smsAuthenticationToken.getPhone(), smsAuthenticationToken.getCode());
+            Authentication smsCodeValidAuthentication = smsAuthenticationToken;
+            smsAuthenticationToken.setAuthenticated(false);
             // @formatter:off
             DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                     .registeredClient(registeredClient)

@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin w-100 m-auto" method="post" th:action="@{/login}">
+    <form class="form-signin w-100 m-auto" method="post" th:action="@{/sso-login}">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>
@@ -22,20 +22,14 @@
             <label for="username">Username</label>
         </div>
         <div class="form-floating">
-<!--            <input type="password" id="password" name="password" class="form-control" required>-->
-<!--            <label for="password">Password</label>-->
             <input type="text" id="code" name="code" class="form-control" required>
-            <label for="code">Password</label>
+            <label for="code">code</label>
         </div>
         <div>
             <button class="w-100 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/gitee" role="link" style="margin-top: 10px">
                 <img src="/assets/img/gitee.png" th:src="@{/assets/img/gitee.png}" width="20" style="margin-right: 5px;" alt="Sign in with Gitee">
                 Sign in with Gitee
-            </a>
-            <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/wechat" role="link" style="margin-top: 10px">
-                <img src="/assets/img/gitee.png" th:src="@{/assets/img/gitee.png}" width="20" style="margin-right: 5px;" alt="Sign in with Wechat">
-                Sign in with Wechat
             </a>
             <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/github-idp" role="link" style="margin-top: 10px">
                 <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" style="margin-right: 5px;" alt="Sign in with Github">

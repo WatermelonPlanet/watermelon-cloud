@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -37,7 +36,7 @@ public class ResourceServerConfig {
                 .sessionManagement(AbstractHttpConfigurer::disable)//前后端分离 无状态 单独登录场景下禁用
                 .oauth2ResourceServer(oauth2 -> oauth2
                                 // 可在此处添加自定义解析设置
-                                .jwt(jwt->Customizer.withDefaults())
+                                .jwt(Customizer.withDefaults())
                         // 添加未携带token和权限不足异常处理
 //                        .accessDeniedHandler(SecurityUtils::exceptionHandler)
 //                        .authenticationEntryPoint(SecurityUtils::exceptionHandler)

@@ -1,11 +1,11 @@
 package com.watermelon.authorization.support.sms;
 
-import com.alibaba.nacos.common.utils.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.util.StringUtils;
 
 
 /**
@@ -32,7 +32,7 @@ public class SmsCodeValidAuthenticationProvider implements AuthenticationProvide
             throw new OAuth2AuthenticationException("验证码：【" + code + "】已过期!");
         }
         //使用 UsernamePasswordAuthenticationToken 返回
-        return new UsernamePasswordAuthenticationToken(phone, null);
+        return new UsernamePasswordAuthenticationToken(phone, "password");
     }
 
     @Override
