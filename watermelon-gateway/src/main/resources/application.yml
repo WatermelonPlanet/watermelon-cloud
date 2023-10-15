@@ -48,7 +48,7 @@ spring:
             client-id: messaging-client
             client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc"
             scope: openid, profile
             client-name: messaging-client-oidc
 
@@ -59,7 +59,7 @@ spring:
 
 logging:
   level:
-    root: INFO
-    org.springframework.web.*: debug
+    root: trace
+    org.springframework.web.*: trace
     org.springframework.security.*: trace
     org.springframework.web.reactive.* : trace

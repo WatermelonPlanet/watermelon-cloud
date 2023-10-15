@@ -1,4 +1,5 @@
-package com.watermelon.authorization.jose;
+package com.watermelon.authorization.util;
+
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -40,6 +41,11 @@ final class KeyGeneratorUtils {
 		}
 		return keyPair;
 	}
+
+//	static KeyPair generateRsaKey() {
+//		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("static/watermelon-jwt.jks"), "watermelon".toCharArray());
+//		return keyStoreKeyFactory.getKeyPair("watermelon", "watermelon".toCharArray());
+//	}
 
 	static KeyPair generateEcKey() {
 		EllipticCurve ellipticCurve = new EllipticCurve(

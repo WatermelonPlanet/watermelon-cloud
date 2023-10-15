@@ -13,11 +13,11 @@ spring:
     password: 123456
 
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-        namespace: dev
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: 127.0.0.1:8848
+#        namespace: dev
 
   security:
     oauth2:
@@ -62,8 +62,9 @@ spring:
 
 logging:
   level:
-    root: INFO
+    root: debug
     org.springframework.web: INFO
-    org.springframework.security: debug
+#    org.springframework.security: trace
+    org.springframework.security.*: debug
     org.springframework.security.oauth2: debug
     org.springframework.security.oauth2.client: debug

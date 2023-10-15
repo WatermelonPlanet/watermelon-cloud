@@ -1,16 +1,22 @@
-package com.watermelon.authorization.jose;
+package com.watermelon.authorization.util;
 
 import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.crypto.SecretKey;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.UUID;
 
 /**
@@ -29,10 +35,11 @@ public final class Jwks {
 		// @formatter:off
 		return new RSAKey.Builder(publicKey)
 				.privateKey(privateKey)
-				.keyID(UUID.randomUUID().toString())
 				.build();
 		// @formatter:on
 	}
+
+
 
 	public static ECKey generateEc() {
 		KeyPair keyPair = KeyGeneratorUtils.generateEcKey();

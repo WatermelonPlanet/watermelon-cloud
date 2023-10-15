@@ -1,12 +1,9 @@
 
 package com.watermelon.authorization.config;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
+
+import com.watermelon.authorization.consent.AuthorizationServerConfigurationConsent;
 import com.watermelon.authorization.federation.FederatedIdentityIdTokenCustomizer;
-import com.watermelon.authorization.jose.Jwks;
 import com.watermelon.authorization.support.device.DeviceClientAuthenticationConverter;
 import com.watermelon.authorization.support.device.DeviceClientAuthenticationProvider;
 import com.watermelon.authorization.support.sms.SmsAuthenticationConverter;
@@ -22,7 +19,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
@@ -59,7 +55,6 @@ public class AuthorizationServerConfig {
                         authorizationServerSettings.getDeviceAuthorizationEndpoint());
         DeviceClientAuthenticationProvider deviceClientAuthenticationProvider =
                 new DeviceClientAuthenticationProvider(registeredClientRepository);
-
         // @formatter:off
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .deviceAuthorizationEndpoint(deviceAuthorizationEndpoint ->
@@ -80,9 +75,9 @@ public class AuthorizationServerConfig {
 
         // @formatter:off
         http
-                .exceptionHandling((exceptions) -> exceptions
+                .exceptionHandling(exceptions -> exceptions
                         .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new LoginUrlAuthenticationEntryPoint(AuthorizationServerConfigurationConsent.LOGIN_PAGE_URL),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
                 )
@@ -100,8 +95,10 @@ public class AuthorizationServerConfig {
                         tokenEndpoint.accessTokenRequestConverter(smsAuthenticationConverter)
                                      .authenticationProvider(smsAuthenticationProvider)//选择追加的方式
                                     .authenticationProvider(smsCodeValidAuthenticationProvider)
-
+//                                .accessTokenResponseHandler(new RequestAwareAuthenticationSuccessHandler())
                 );
+
+
         DefaultSecurityFilterChain build = http.build();
         this.initAuthenticationProviderFiled(http, smsAuthenticationProvider, smsCodeValidAuthenticationProvider);
         return build;
@@ -124,17 +121,18 @@ public class AuthorizationServerConfig {
         return new FederatedIdentityIdTokenCustomizer();
     }
 
-    @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = Jwks.generateRsa();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
-    }
 
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
+//    @Bean
+//    public JWKSource<SecurityContext> jwkSource() {
+//        RSAKey rsaKey = Jwks.generateRsa();
+//        JWKSet jwkSet = new JWKSet(rsaKey);
+//        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+//    }
+//
+//    @Bean
+//    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+//        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+//    }
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
