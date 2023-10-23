@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Collection;
  * @date 2023-09-18
  * @description
  */
-public class PhoneCaptchaAuthenticationToken extends AbstractAuthenticationToken {
+public class PhoneCaptchaAuthenticationToken extends AbstractAuthenticationToken implements Serializable {
 
     private final Object principal;
 

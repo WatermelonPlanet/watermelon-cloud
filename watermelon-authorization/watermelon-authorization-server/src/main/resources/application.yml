@@ -12,6 +12,11 @@ spring:
     username: postgres
     password: 123456
 
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
 
   cloud:
     nacos:
@@ -60,11 +65,12 @@ spring:
             # 发起授权申请的地址
             authorization-uri: https://gitee.com/oauth/authorize
 
+
 logging:
   level:
-    root: debug
-    org.springframework.web: INFO
+    root: info
+    org.springframework.web: info
 #    org.springframework.security: trace
     org.springframework.security.*: debug
-    org.springframework.security.oauth2: debug
-    org.springframework.security.oauth2.client: debug
+#    org.springframework.security.oauth2: debug
+#    org.springframework.security.oauth2.client: debug

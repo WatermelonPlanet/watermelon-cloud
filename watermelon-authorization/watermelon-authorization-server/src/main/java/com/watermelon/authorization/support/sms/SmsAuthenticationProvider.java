@@ -22,6 +22,8 @@ import org.springframework.security.oauth2.server.authorization.token.DefaultOAu
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,12 +67,18 @@ public final class SmsAuthenticationProvider implements AuthenticationProvider {
         }
 
         try {
-            if (!smsAuthenticationToken.getCode().equals("000000")) {
-                throw new OAuth2AuthenticationException("验证码：【" + smsAuthenticationToken.getCode() + "】已过期!");
+            //todo 验证码验证逻辑
+            //验证码
+            String code = smsAuthenticationToken.getCode();
+            if (!StringUtils.hasText(code)) {
+                throw new OAuth2AuthenticationException("验证码不能为空!");
             }
-//            SmsCodeValidAuthenticationToken smsCodeValidAuthenticationToken = new SmsCodeValidAuthenticationToken(smsAuthenticationToken.getPhone(), smsAuthenticationToken.getCode());
+            //todo 暂时先写000000 ，发送验证码的我们还没有写的
+            if (!code.equals("000000")) {
+                throw new OAuth2AuthenticationException("验证码：【" + code + "】已过期!");
+            }
             Authentication smsCodeValidAuthentication = smsAuthenticationToken;
-            smsAuthenticationToken.setAuthenticated(false);
+            smsAuthenticationToken.setAuthenticated(true);
             // @formatter:off
             DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                     .registeredClient(registeredClient)
