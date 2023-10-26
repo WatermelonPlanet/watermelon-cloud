@@ -4,10 +4,11 @@ import com.watermelon.authorization.util.AESUtil;
 import lombok.SneakyThrows;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 
+import java.util.Map;
+
 /**
  * token 生成
  * @author byh
- * @date 2023-10-23 17:42
  * @description
  */
 public  class AecEncryptionStringKeyGenerator implements StringKeyGenerator {

@@ -13,7 +13,7 @@ import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthentica
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationProvider;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationProvider;
-import com.watermelon.authorization.util.Jwks;
+import com.watermelon.authorization.util.JwtKeyUtil;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +26,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
@@ -40,6 +41,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 
 @Configuration(proxyBeanMethods = false)
@@ -105,7 +109,6 @@ public class AuthorizationServerConfig {
                 .tokenEndpoint(tokenEndpoint->
                         tokenEndpoint.accessTokenRequestConverter(smsAuthenticationConverter)
                                      .authenticationProvider(smsAuthenticationProvider)//选择追加的方式
-//                                .accessTokenResponseHandler(new RequestAwareAuthenticationSuccessHandler())
                 );
 
         DefaultSecurityFilterChain build = http.build();
@@ -128,8 +131,8 @@ public class AuthorizationServerConfig {
 
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = Jwks.generateRsa();
+    public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+        RSAKey rsaKey = JwtKeyUtil.generateRsa();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
@@ -167,11 +170,15 @@ public class AuthorizationServerConfig {
         }
     }
 
-//    @SuppressWarnings("unchecked")
-//    static void getTokenGenerator(HttpSecurity httpSecurity) {
+
+    /**
+     * 替换jwt的token生成
+     */
+//    @Bean
+//    public OAuth2TokenGenerator oAuth2TokenGenerator() {
 //        AesEncryptionOAuth2TokenGenerator aesEncryptionOAuth2TokenGenerator = new AesEncryptionOAuth2TokenGenerator();
-//        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator);
-//        httpSecurity.setSharedObject(OAuth2TokenGenerator.class, tokenGenerator);
+//        aesEncryptionOAuth2TokenGenerator.setAccessTokenCustomizer(new AesEncryptionOAuth2TokenCustomizer());
+//        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator());
 //    }
 }
 
