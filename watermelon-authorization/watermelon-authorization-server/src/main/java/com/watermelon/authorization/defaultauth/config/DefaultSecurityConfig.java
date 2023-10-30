@@ -8,14 +8,17 @@ import com.watermelon.authorization.defaultauth.filter.UserAuthenticationFilter;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -44,10 +47,14 @@ public class DefaultSecurityConfig {
     @Resource
     public SmsCodeService smsCodeService;
 
+    @Resource
+    public UserDetailsService userDetailsService;
+
 
     // 过滤器链
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter();
         http
                 .addFilterAt(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -56,7 +63,7 @@ public class DefaultSecurityConfig {
                                 .requestMatchers(
                                         "/assets/**",
                                         "/webjars/**",
-                                        "/get_sms_code",
+                                        "/sms_code",
                                         AuthorizationServerConfigurationConsent.LOGIN_PAGE_URL,
                                         "/oauth2/**",
                                         "/oauth2/token"
@@ -65,6 +72,7 @@ public class DefaultSecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(phoneCaptchaAuthenticationProvider)
+                .authenticationProvider(provider)
                 .formLogin(login ->
                         login.loginPage(AuthorizationServerConfigurationConsent.LOGIN_PAGE_URL)
                                 .defaultSuccessUrl("/test") // 登录成功后的跳转路径
@@ -74,6 +82,7 @@ public class DefaultSecurityConfig {
                 );
 
         DefaultSecurityFilterChain build = http.build();
+        provider.setUserDetailsService(userDetailsService);
         initDefaultSecurityFilter(http, userAuthenticationFilter);
         return build;
     }
@@ -103,16 +112,6 @@ public class DefaultSecurityConfig {
         return new FederatedIdentityAuthenticationSuccessHandler();
     }
 
-
-    /**
-     * 加密解密需要
-     *
-     * @return
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
 
     //如果正在使用Spring Security 的并发会话控制功能，建议注册 SessionRegistry @Bean以确保它在 Spring Security 的并发会话控制和 Spring 授权服务器的注销功能之间共享。

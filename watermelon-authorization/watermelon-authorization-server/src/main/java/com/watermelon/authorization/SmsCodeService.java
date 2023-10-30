@@ -32,7 +32,7 @@ public class SmsCodeService {
      * @param phone
      * @return
      */
-    public void sentValidCode(String phone) {
+    public String sentValidCode(String phone) {
         //生成验证码
         String sentValidateCode = RandomUtil.randomNumbers(6);
         //构建验证码key
@@ -42,6 +42,7 @@ public class SmsCodeService {
         redisTemplate.opsForValue().set(key, sentValidateCode, validCodeExpirationTime, TimeUnit.SECONDS);
         //todo 短信发送
         log.info("sentValidCode success [phone:{},code:{}]", phone, sentValidateCode);
+        return sentValidateCode;
     }
 
     /**

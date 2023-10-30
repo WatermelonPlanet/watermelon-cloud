@@ -1,42 +1,105 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Spring Authorization Server sample</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
-    <link rel="stylesheet" href="/assets/css/signin.css" th:href="@{/assets/css/signin.css}" />
+    <title>Spring Authorization Server Sample</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css"
+          th:href="@{/webjars/bootstrap/css/bootstrap.css}"/>
+    <link rel="stylesheet" href="/assets/css/signin.css" th:href="@{/assets/css/signin.css}"/>
+    <style>
+        /* Add custom styles here */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .form-signin {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-floating {
+            margin-bottom: 20px;
+        }
+
+        .form-code {
+            display: flex;
+        }
+
+        .form-code input {
+            flex: 1;
+        }
+
+        button[type="button"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <form class="form-signin w-100 m-auto" method="post" th:action="@{/sso-login}">
-        <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            Invalid username or password.
-        </div>
-        <div th:if="${param.logout}" class="alert alert-success" role="alert">
-            You have been logged out.
-        </div>
+    <form class="form-signin" method="post" th:action="@{/sso-login}">
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">Invalid username or password.</div>
+        <div th:if="${param.logout}" class="alert alert-success" role="alert">You have been logged out.</div>
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
         <div class="form-floating">
-            <input type="text" id="username" name="username" class="form-control" required autofocus>
-            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control" required placeholder="username">
         </div>
         <div class="form-floating">
-            <input type="text" id="code" name="code" class="form-control" required>
-            <label for="code">code</label>
+            <div class="form-code">
+                <input type="text" id="code" name="code" class="form-control" required placeholder="code">
+                <button class="form-code-but" type="button" onclick="getSmsCode()">获取验证码</button>
+            </div>
         </div>
-        <div>
-            <button class="w-100 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-            <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/gitee" role="link" style="margin-top: 10px">
-                <img src="/assets/img/gitee.png" th:src="@{/assets/img/gitee.png}" width="20" style="margin-right: 5px;" alt="Sign in with Gitee">
-                Sign in with Gitee
-            </a>
-            <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/github-idp" role="link" style="margin-top: 10px">
-                <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" style="margin-right: 5px;" alt="Sign in with Github">
-                Sign in with Github
-            </a>
-        </div>
+        <button class="w-100 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/gitee" role="link"
+           style="margin-top: 10px">
+            <img src="/assets/img/gitee.png" th:src="@{/assets/img/gitee.png}" width="20" style="margin-right: 5px;"
+                 alt="Sign in with Gitee">
+            Sign in with Gitee
+        </a>
+        <a class="w-100 btn btn-light btn-block bg-white" href="/oauth2/authorization/github-idp" role="link"
+           style="margin-top: 10px">
+            <img src="/assets/img/github.png" th:src="@{/assets/img/github.png}" width="24" style="margin-right: 5px;"
+                 alt="Sign in with Github">
+            Sign in with Github
+        </a>
     </form>
 </div>
 </body>
+<script>
+    function getSmsCode() {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                const data = response.data;
+                document.getElementById("code").value = data;
+            }
+        };
+        const username = document.getElementById("username").value;
+        if (username === "" || username === null || username === '') {
+            alert("Username cannot be empty!");
+        }
+        const requestUrl = "/sms_code?phone=" + username;
+        xhr.open("GET", requestUrl, true);
+        xhr.send();
+    }
+</script>
 </html>
