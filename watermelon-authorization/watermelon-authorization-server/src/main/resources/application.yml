@@ -69,11 +69,11 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.web: info
-#    org.springframework.security: trace
+    org.springframework.web: debug
+    org.springframework.security: debug
     org.springframework.security.*: debug
-#    org.springframework.security.oauth2: debug
-#    org.springframework.security.oauth2.client: debug
+    org.springframework.security.oauth2: debug
+    org.springframework.security.oauth2.client: debug
 
 phone:
   valid-code:

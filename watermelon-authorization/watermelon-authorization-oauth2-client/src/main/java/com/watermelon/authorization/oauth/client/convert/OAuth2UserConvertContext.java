@@ -26,7 +26,7 @@ public class OAuth2UserConvertContext {
     }
     /**
      * 获取实例
-     *
+     * // todo 优化方案（不获取每个convert的实例了，也使用过滤器链的方式进行执行）
      * @param platform
      * @return
      */

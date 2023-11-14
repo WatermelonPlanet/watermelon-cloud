@@ -33,8 +33,6 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
     private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter =
             new OAuth2AccessTokenResponseHttpMessageConverter();
 
-    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -65,8 +63,5 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         // 无状态 注意删除 context 上下文的信息
         SecurityContextHolder.clearContext();
         this.accessTokenHttpResponseConverter.write(accessTokenResponse, null, httpResponse);
-//        String redirectUri="http://127.0.0.1:8080/watermelon-user/messages";
-//        this.redirectStrategy.sendRedirect(request, response, redirectUri);
-
     }
 }

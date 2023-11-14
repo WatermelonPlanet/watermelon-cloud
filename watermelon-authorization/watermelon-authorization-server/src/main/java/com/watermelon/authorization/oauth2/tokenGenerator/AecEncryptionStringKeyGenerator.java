@@ -1,38 +1,63 @@
 package com.watermelon.authorization.oauth2.tokenGenerator;
 
-import com.watermelon.authorization.util.AESUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import com.watermelon.common.core.util.AESUtil;
 import lombok.SneakyThrows;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.time.Instant;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * token 生成
+ *
  * @author byh
  * @description
  */
-public  class AecEncryptionStringKeyGenerator implements StringKeyGenerator {
+public class AecEncryptionStringKeyGenerator implements StringKeyGenerator {
 
-    private  String aecKey;
-    private  String clientId;
-    private  String id;
+    private final static String SEPARATOR = "::";
+    private final static String COMMA = ",:";
+    private final static String AEC_KYE = "c79112eb6e994b51a866b6481d36004b";
+    /**
+     * 用户id
+     */
+    private Long userId;
+    /**
+     * 客户端id
+     */
+    private String clientId;
+    /**
+     * 客户端密钥
+     */
+    private String clientSecret;
+    /**
+     * scopes
+     */
+    private Set<String> scopes;
 
-    public AecEncryptionStringKeyGenerator(String aecKey, String clientId, String id) {
-        this.aecKey = aecKey;
+    public AecEncryptionStringKeyGenerator(Long userId, String clientId, String clientSecret, Set<String> scopes) {
+        this.userId = userId;
         this.clientId = clientId;
-        this.id = id;
+        this.clientSecret = clientSecret;
+        this.scopes = scopes;
     }
-
-    public AecEncryptionStringKeyGenerator() {
-    }
-
-
 
     @SneakyThrows
     @Override
     public String generateKey() {
-        String tokenKey = id + "::" + clientId + "::" + aecKey;
-        String aesKeyString = aecKey.substring(0, 16);
-        return AESUtil.encrypt(tokenKey,aesKeyString);
+        long timer = Instant.now().toEpochMilli();
+        String tokenContent = Optional.ofNullable(userId)
+                .map(u -> u.toString().concat(SEPARATOR).concat(clientId).concat(SEPARATOR).concat(Long.toString(timer)))
+                .orElse(null);
+        if(!CollectionUtils.isEmpty(scopes)){
+            String scopeStr = CollectionUtil.join(scopes, COMMA);
+            tokenContent.concat(SEPARATOR).concat(scopeStr);
+        }
+        assert tokenContent != null;
+        return AESUtil.encrypt(tokenContent, AEC_KYE);
     }
+
 }

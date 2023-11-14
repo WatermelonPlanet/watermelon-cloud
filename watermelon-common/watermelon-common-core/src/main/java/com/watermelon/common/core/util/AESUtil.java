@@ -1,4 +1,4 @@
-package com.watermelon.authorization.util;
+package com.watermelon.common.core.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

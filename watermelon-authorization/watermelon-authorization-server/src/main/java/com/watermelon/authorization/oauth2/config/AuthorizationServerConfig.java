@@ -9,10 +9,13 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.watermelon.authorization.SmsCodeService;
 import com.watermelon.authorization.consent.AuthorizationServerConfigurationConsent;
 import com.watermelon.authorization.oauth2.federation.FederatedIdentityIdTokenCustomizer;
+import com.watermelon.authorization.oauth2.filter.AecEncryptionEndpointFilter;
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationProvider;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationProvider;
+import com.watermelon.authorization.oauth2.tokenGenerator.AesEncryptionOAuth2TokenCustomizer;
+import com.watermelon.authorization.oauth2.tokenGenerator.AesEncryptionOAuth2TokenGenerator;
 import com.watermelon.authorization.util.JwtKeyUtil;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -36,9 +39,11 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.*;
+import org.springframework.security.oauth2.server.authorization.web.NimbusJwkSetEndpointFilter;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import java.io.IOException;
@@ -65,7 +70,6 @@ public class AuthorizationServerConfig {
             AuthorizationServerSettings authorizationServerSettings) throws Exception {
 
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-
         DeviceClientAuthenticationConverter deviceClientAuthenticationConverter =
                 new DeviceClientAuthenticationConverter(
                         authorizationServerSettings.getDeviceAuthorizationEndpoint());
@@ -111,6 +115,9 @@ public class AuthorizationServerConfig {
                                      .authenticationProvider(smsAuthenticationProvider)//选择追加的方式
                 );
 
+        //AecEncryptionEndpointFilter
+        http.addFilterBefore(new AecEncryptionEndpointFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+
         DefaultSecurityFilterChain build = http.build();
         this.initAuthenticationProviderFiled(http, smsAuthenticationProvider);
         return build;
@@ -144,7 +151,10 @@ public class AuthorizationServerConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        AuthorizationServerSettings build = AuthorizationServerSettings
+                .builder()
+                .jwkSetEndpoint("/oauth2/aecs").build();
+        return build;
     }
 
 
@@ -174,11 +184,10 @@ public class AuthorizationServerConfig {
     /**
      * 替换jwt的token生成
      */
-//    @Bean
-//    public OAuth2TokenGenerator oAuth2TokenGenerator() {
-//        AesEncryptionOAuth2TokenGenerator aesEncryptionOAuth2TokenGenerator = new AesEncryptionOAuth2TokenGenerator();
-//        aesEncryptionOAuth2TokenGenerator.setAccessTokenCustomizer(new AesEncryptionOAuth2TokenCustomizer());
-//        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator());
-//    }
+    @Bean
+    public OAuth2TokenGenerator oAuth2TokenGenerator() {
+        AesEncryptionOAuth2TokenGenerator aesEncryptionOAuth2TokenGenerator = new AesEncryptionOAuth2TokenGenerator();
+        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator());
+    }
 }
 
