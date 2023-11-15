@@ -14,6 +14,7 @@ import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthentica
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationProvider;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationProvider;
+import com.watermelon.authorization.oauth2.tokenGenerator.AesEncryptionOAuth2IdTokenGenerator;
 import com.watermelon.authorization.oauth2.tokenGenerator.AesEncryptionOAuth2TokenCustomizer;
 import com.watermelon.authorization.oauth2.tokenGenerator.AesEncryptionOAuth2TokenGenerator;
 import com.watermelon.authorization.util.JwtKeyUtil;
@@ -187,7 +188,8 @@ public class AuthorizationServerConfig {
     @Bean
     public OAuth2TokenGenerator oAuth2TokenGenerator() {
         AesEncryptionOAuth2TokenGenerator aesEncryptionOAuth2TokenGenerator = new AesEncryptionOAuth2TokenGenerator();
-        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator());
+        AesEncryptionOAuth2IdTokenGenerator aesEncryptionOAuth2IdTokenGenerator = new AesEncryptionOAuth2IdTokenGenerator();
+        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator(),aesEncryptionOAuth2IdTokenGenerator);
     }
 }
 

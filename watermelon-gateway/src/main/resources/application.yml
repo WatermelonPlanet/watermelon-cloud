@@ -59,7 +59,8 @@ spring:
 
 logging:
   level:
-    root: trace
-    org.springframework.web.*: trace
-    org.springframework.security.*: trace
-    org.springframework.web.reactive.* : trace
+    root: info
+    org.springframework.web.*: debug
+    org.springframework.security.*: debug
+    org.springframework.web.reactive.* : debug
+    org.springframework.security.oauth2.client.web.*: trace

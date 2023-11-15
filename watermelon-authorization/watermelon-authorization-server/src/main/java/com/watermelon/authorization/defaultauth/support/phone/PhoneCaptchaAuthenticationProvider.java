@@ -2,11 +2,9 @@
 package com.watermelon.authorization.defaultauth.support.phone;
 
 
-import com.watermelon.authorization.SmsCodeService;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
