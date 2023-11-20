@@ -8,11 +8,11 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.watermelon.authorization.SmsCodeService;
 import com.watermelon.authorization.consent.AuthorizationServerConfigurationConsent;
-import com.watermelon.authorization.oauth2.federation.FederatedIdentityIdTokenCustomizer;
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.device.DeviceClientAuthenticationProvider;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationConverter;
 import com.watermelon.authorization.oauth2.support.sms.SmsAuthenticationProvider;
+import com.watermelon.authorization.oauth2.tokenGenerator.ExtOAuth2TokenJwtCustomizer;
 import com.watermelon.authorization.util.JwtKeyUtil;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
@@ -118,15 +118,16 @@ public class AuthorizationServerConfig {
 
 
 
-    //todo 授权信息也可存储redis中
+    // 授权信息也可存储redis中
     @Bean
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 
+    //jwt 信息扩展
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> idTokenCustomizer() {
-        return new FederatedIdentityIdTokenCustomizer();
+        return new ExtOAuth2TokenJwtCustomizer();
     }
 
 
@@ -171,14 +172,5 @@ public class AuthorizationServerConfig {
     }
 
 
-    /**
-     * 替换jwt的token生成
-     */
-//    @Bean
-//    public OAuth2TokenGenerator oAuth2TokenGenerator() {
-//        AesEncryptionOAuth2TokenGenerator aesEncryptionOAuth2TokenGenerator = new AesEncryptionOAuth2TokenGenerator();
-//        aesEncryptionOAuth2TokenGenerator.setAccessTokenCustomizer(new AesEncryptionOAuth2TokenCustomizer());
-//        return new DelegatingOAuth2TokenGenerator(aesEncryptionOAuth2TokenGenerator, new OAuth2RefreshTokenGenerator());
-//    }
 }
 

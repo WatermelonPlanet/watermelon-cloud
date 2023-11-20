@@ -15,7 +15,7 @@ public class AuthorizationServerConfigurationConsent {
 
     public static final String OAUTH2_PARAMETER_NAME_SMS_CODE = "code";
 
-    public static final String OAUTH2_THIRD_LOGIN_PLATFORM_USER_INFO_PARAMETER = "user_info";
+    public static final String USER_INFO_PARAMETER = "user_info";
 
     public static final String LOGIN_PAGE_URL = "/sso-login";
 
